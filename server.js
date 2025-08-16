@@ -21,6 +21,11 @@ db.connect(err => {
   else console.log("MySQL connected");
 });
 
+app.get('/', (req, res) => {
+  res.send('API is running');
+});
+
+
 // Signup endpoint
 app.post("/signup", async (req, res) => {
   const { name, account_no, email, password } = req.body;
