@@ -5,8 +5,15 @@ const bcrypt = require("bcryptjs");
 require("dotenv").config();
 
 const app = express();
-app.use(cors());
+
+// Middleware
 app.use(express.json());
+app.use(cors({
+    origin: [
+        'http://localhost:3000', // Local frontend
+        'https://dairy-frontend-cawn.onrender.com' // Deployed frontend URL
+    ]
+}));
 
 // MySQL connection
 const db = mysql.createConnection({
@@ -22,10 +29,10 @@ db.connect(err => {
   else console.log("MySQL connected");
 });
 
+// Root route
 app.get('/', (req, res) => {
   res.send('API is running');
 });
-
 
 // Signup endpoint
 app.post("/signup", async (req, res) => {
