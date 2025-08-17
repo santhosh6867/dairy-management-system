@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors({
     origin: [
         'http://localhost:3000', // Local frontend
-        'https://dairy-frontend-cawn.onrender.com' // Deployed frontend URL
+        'https://dairy-frontend-cawn.onrender.com' // Deployed frontend
     ]
 }));
 
@@ -21,12 +21,12 @@ const db = mysql.createConnection({
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
-  port: process.env.DB_PORT
+  port: Number(process.env.DB_PORT)
 });
 
 db.connect(err => {
   if (err) console.error("DB connection error:", err);
-  else console.log("MySQL connected");
+  else console.log("MySQL connected successfully");
 });
 
 // Root route
