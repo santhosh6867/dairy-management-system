@@ -159,23 +159,24 @@ app.get("/milk-summary/:account_no", (req, res) => {
     const user_id = results[0].id;
 
     const sql = `
-      SELECT DATE_FORMAT(d.date, '%Y-%m-%d') AS date, s.session,
-        ROUND(COALESCE(SUM(e.quantity),0), 2) AS total_quantity,
-        ROUND(COALESCE(SUM(e.quantity * e.fat)/NULLIF(SUM(e.quantity),0),0), 2) AS avg_fat,
-        ROUND(COALESCE(SUM(e.quantity * e.snf)/NULLIF(SUM(e.quantity),0),0), 2) AS avg_snf,
-        ROUND(COALESCE(SUM(e.amount),0), 2) AS total_amount
-      FROM (
-        SELECT CURDATE() - INTERVAL n DAY AS date
-        FROM (SELECT 9 AS n UNION ALL SELECT 8 UNION ALL SELECT 7 UNION ALL
-              SELECT 6 UNION ALL SELECT 5 UNION ALL SELECT 4 UNION ALL
-              SELECT 3 UNION ALL SELECT 2 UNION ALL SELECT 1 UNION ALL SELECT 0) AS days
-      ) AS d
-      CROSS JOIN (SELECT 'morning' AS session UNION ALL SELECT 'evening') AS s
-      LEFT JOIN milk_entries e
-        ON DATE(e.entry_date) = d.date AND e.session = s.session AND e.user_id = ?
-      GROUP BY d.date, s.session
-      ORDER BY d.date ASC, FIELD(s.session, 'morning','evening');
-    `;
+  SELECT DATE_FORMAT(d.date, '%Y-%m-%d') AS date, s.session,
+    ROUND(COALESCE(SUM(e.quantity),0), 2) AS total_quantity,
+    ROUND(COALESCE(SUM(e.quantity * e.fat)/NULLIF(SUM(e.quantity),0),0), 2) AS avg_fat,
+    ROUND(COALESCE(SUM(e.quantity * e.snf)/NULLIF(SUM(e.quantity),0),0), 2) AS avg_snf,
+    ROUND(COALESCE(SUM(e.amount),0), 2) AS total_amount
+  FROM (
+    SELECT CURDATE() - INTERVAL n DAY AS date
+    FROM (SELECT 16 AS n UNION ALL SELECT 15 UNION ALL SELECT 14 UNION ALL
+          SELECT 13 UNION ALL SELECT 12 UNION ALL SELECT 11 UNION ALL
+          SELECT 10 UNION ALL SELECT 9 UNION ALL SELECT 8 UNION ALL SELECT 7) AS days
+  ) AS d
+  CROSS JOIN (SELECT 'morning' AS session UNION ALL SELECT 'evening') AS s
+  LEFT JOIN milk_entries e
+    ON DATE(e.entry_date) = d.date AND e.session = s.session AND e.user_id = ?
+  GROUP BY d.date, s.session
+  ORDER BY d.date ASC, FIELD(s.session, 'morning','evening');
+`;
+
 
     db.query(sql, [user_id], (err2, summary) => {
       if (err2) return res.status(500).json({ success: false, message: err2.message });
