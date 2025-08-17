@@ -165,10 +165,16 @@ app.get("/milk-summary/:account_no", (req, res) => {
         ROUND(COALESCE(SUM(e.quantity * e.snf)/NULLIF(SUM(e.quantity),0),0), 2) AS avg_snf,
         ROUND(COALESCE(SUM(e.amount),0), 2) AS total_amount
       FROM (
-        SELECT CURDATE() - INTERVAL n DAY AS date
-        FROM (SELECT 9 AS n UNION ALL SELECT 8 UNION ALL SELECT 7 UNION ALL
-              SELECT 6 UNION ALL SELECT 5 UNION ALL SELECT 4 UNION ALL
-              SELECT 3 UNION ALL SELECT 2 UNION ALL SELECT 1 UNION ALL SELECT 0) AS days
+        SELECT '2025-08-07' AS date UNION ALL
+        SELECT '2025-08-08' UNION ALL
+        SELECT '2025-08-09' UNION ALL
+        SELECT '2025-08-10' UNION ALL
+        SELECT '2025-08-11' UNION ALL
+        SELECT '2025-08-12' UNION ALL
+        SELECT '2025-08-13' UNION ALL
+        SELECT '2025-08-14' UNION ALL
+        SELECT '2025-08-15' UNION ALL
+        SELECT '2025-08-16'
       ) AS d
       CROSS JOIN (SELECT 'morning' AS session UNION ALL SELECT 'evening') AS s
       LEFT JOIN milk_entries e
